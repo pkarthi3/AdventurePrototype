@@ -11,14 +11,7 @@ class Demo1 extends AdventureScene {
             .on('pointerover', () => this.showMessage("Metal, bent."))
             .on('pointerdown', () => {
                 this.showMessage("No touching!");
-                this.tweens.add({
-                    targets: clip,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
-                });
+                this.shake(clip);
             });
 
         let key = this.add.text(this.w * 0.5, this.w * 0.1, "🔑 key")
@@ -92,6 +85,22 @@ class Demo2 extends AdventureScene {
     }
 }
 
+class Room3 extends AdventureScene {
+    constructor() {
+        super('room3')
+    }
+
+    create() {}
+}
+
+class SecretRoom extends AdventureScene {
+    constructor() {
+        super('secretroom')
+    }
+
+    create() {}
+}
+
 class Intro extends Phaser.Scene {
     constructor() {
         super('intro')
@@ -125,7 +134,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Outro],
+    scene: [Intro, Demo1, Demo2, Room3, SecretRoom, Outro],
     title: "Adventure Game",
 });
 
