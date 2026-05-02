@@ -243,8 +243,19 @@ class AdventureScene extends Phaser.Scene {
     }
 
     describe(item, message) {
-        this.on('pointerover', () => {
+        item.on('pointerover', () => {
             this.showMessage(message);
+        });
+    }
+
+    pickup(item) {
+        this.gainItem(item);
+        this.tweens.add({
+                targets: item,
+                y: `-=${2 * this.s}`,
+                alpha: { from: 1, to: 0 },
+                duration: 500,
+                onComplete: () => item.destroy()
         });
     }
 }

@@ -1,6 +1,6 @@
-class Demo1 extends AdventureScene {
+class Room1 extends AdventureScene {
     constructor() {
-        super("demo1", "First Room");
+        super("room1", "Room 1");
     }
 
     onEnter() {
@@ -8,11 +8,11 @@ class Demo1 extends AdventureScene {
         let clip = this.add.text(this.w * 0.3, this.w * 0.3, "📎 paperclip")
             .setFontSize(this.s * 2)
             .setInteractive()
-            .on('pointerover', () => this.showMessage("Metal, bent."))
             .on('pointerdown', () => {
                 this.showMessage("No touching!");
                 this.shake(clip);
             });
+            this.describe(clip, "Metal, bent.");
 
         let key = this.add.text(this.w * 0.5, this.w * 0.1, "🔑 key")
             .setFontSize(this.s * 2)
@@ -47,41 +47,19 @@ class Demo1 extends AdventureScene {
                     this.loseItem("key");
                     this.showMessage("*squeak*");
                     door.setText("🚪 unlocked door");
-                    this.gotoScene('demo2');
+                    this.gotoScene('room2');
                 }
             })
 
     }
 }
 
-class Demo2 extends AdventureScene {
+class Room2 extends AdventureScene {
     constructor() {
-        super("demo2", "The second room has a long name (it truly does).");
+        super("room2", "Room 2");
     }
     onEnter() {
-        this.add.text(this.w * 0.3, this.w * 0.4, "just go back")
-            .setFontSize(this.s * 2)
-            .setInteractive()
-            .on('pointerover', () => {
-                this.showMessage("You've got no other choice, really.");
-            })
-            .on('pointerdown', () => {
-                this.gotoScene('demo1');
-            });
 
-        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
-            .setInteractive()
-            .on('pointerover', () => {
-                this.showMessage('*giggles*');
-                this.tweens.add({
-                    targets: finish,
-                    x: this.s + (this.h - 2 * this.s) * Math.random(),
-                    y: this.s + (this.h - 2 * this.s) * Math.random(),
-                    ease: 'Sine.inOut',
-                    duration: 500
-                });
-            })
-            .on('pointerdown', () => this.gotoScene('outro'));
     }
 }
 
@@ -90,7 +68,7 @@ class Room3 extends AdventureScene {
         super('room3')
     }
 
-    create() {}
+    onEnter() {}
 }
 
 class SecretRoom extends AdventureScene {
@@ -98,7 +76,7 @@ class SecretRoom extends AdventureScene {
         super('secretroom')
     }
 
-    create() {}
+    onEnter() {}
 }
 
 class Intro extends Phaser.Scene {
@@ -106,11 +84,13 @@ class Intro extends Phaser.Scene {
         super('intro')
     }
     create() {
-        this.add.text(50,50, "Adventure awaits!").setFontSize(50);
-        this.add.text(50,100, "Click anywhere to begin.").setFontSize(20);
+        let introText = this.add.text(50,50, "A certain corporation has been oddly eager to distribute its gummy worms for gummy worm chai lately. Upon consulting a group you work with, you decide to sneak into their gummy worm labs to see what the deal with them is...")
+            .setFontSize(50)
+            .setWordWrapWidth(this.game.config.width - 100)
+        this.add.text(50,300, "Click anywhere to begin.").setFontSize(20);
         this.input.on('pointerdown', () => {
             this.cameras.main.fade(1000, 0,0,0);
-            this.time.delayedCall(1000, () => this.scene.start('demo1'));
+            this.time.delayedCall(1000, () => this.scene.start('room1'));
         });
     }
 }
@@ -134,7 +114,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Room3, SecretRoom, Outro],
-    title: "Adventure Game",
+    scene: [Intro, Room1, Room2, Room3, SecretRoom, Outro],
+    title: "Secrets of the Gummy Worm Chai",
 });
 
