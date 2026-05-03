@@ -9,7 +9,7 @@ class Room1 extends AdventureScene {
             .setFontSize(this.s * 2)
             .setInteractive()
             .on('pointerdown', () => {
-                this.showMessage("It'd be too suspicious if a key ingredient went missing.");
+                this.showMessage("It'd be too suspicious to just take the whole jar.");
                 this.shake(sugar);
             });
             this.describe(sugar, "Standard sugar used to flavor gummy worms. This batch at least seems like typical sour sugar.");
@@ -66,7 +66,6 @@ class Room2 extends AdventureScene {
             .setInteractive()
             .on('pointerdown', () => {
                 if (this.hasItem('key')) {
-                    this.loseItem('key');
                     this.showMessage("The key perfectly fits into the lock. You carefully open the door...");
                     this.gotoScene('secretroom');
                 }
@@ -101,6 +100,7 @@ class Room2 extends AdventureScene {
             .on('pointerdown', () => {
                 if (this.hasItem('small key')) {
                     this.loseItem('small key');
+                    this.pickupAnimation(box);
                     this.showMessage("You unlock the box, revealing the items inside...")
                     this.gainItem('secret ingredient')
                     this.gainItem('formula')
@@ -121,7 +121,53 @@ class Room3 extends AdventureScene {
         super('room3', "Room 3")
     }
 
-    onEnter() {}
+    onEnter() {
+         let door = this.add.text(this.w * 0.1, this.w * 0.5, "🚪 door to the previous room")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.showMessage("You open the door.");
+                this.gotoScene('room2');
+            })
+            this.describe(door, "A door to the room you were in before.");
+
+        let smallKey = this.add.text(this.w * 0.3, this.w * 0.3, "🔑 small key")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.pickupAnimation(smallKey);
+                this.gainItem('small key');
+                this.showMessage("You pick up the key.")
+            })
+            this.describe(smallKey, "A key that's too small to open any of the doors here, but it might open something else.");
+
+        let door2 = this.add.text(this.w * 0.3, this.w * 0.15, "🚪 exit to the gummy worm labs")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                if(this.hasItem('employee card')) {
+                    if (this.hasItem('secret ingredient') && this.hasItem('formula')) {
+                        this.showMessage("You leave the gummy worm labs with the company secrets in hand.");
+                        this.gotoScene('outro');
+                    } else {
+                        this.showMessage("There still are some things left to discover about the company and its gummy worms...");
+                    }
+                } else {
+                    this.showMessage("For whatever reason, the door is locked both ways...");
+                }
+            })
+            this.describe(door2, "A door leading outside of the gummy worm labs.");
+
+        let ingredients = this.add.text(this.w * 0.35, this.w * 0.4, "🧪 strange ingredients")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.showMessage("It'd be too suspicious to just take the containers with you.");
+                this.shake(ingredients);
+            })
+            this.describe(ingredients, "The typical artificial flavorings and chemicals one would expect gummy worms. At least, that's how they look...");
+
+    }
 }
 
 class SecretRoom extends AdventureScene {
@@ -129,7 +175,9 @@ class SecretRoom extends AdventureScene {
         super('secretroom', "Secret Room")
     }
 
-    onEnter() {}
+    onEnter() {
+        
+    }
 }
 
 class Intro extends Phaser.Scene {
@@ -137,7 +185,7 @@ class Intro extends Phaser.Scene {
         super('intro')
     }
     create() {
-        let introText = this.add.text(50,50, "A certain corporation has been oddly eager to distribute its gummy worms for gummy worm chai lately. Upon consulting a group you work with, you decide to sneak into their gummy worm labs to see what the deal with them is...")
+        let introText = this.add.text(50,50, "A certain corporation has been oddly eager to distribute its gummy worms for gummy worm chai lately. Upon consulting a rebel group you work with, you decide to sneak into their gummy worm labs to see what the deal with them is...")
             .setFontSize(50)
             .setWordWrapWidth(this.game.config.width - 100)
         this.add.text(50,300, "Click anywhere to begin.").setFontSize(20);
@@ -153,7 +201,7 @@ class Outro extends Phaser.Scene {
         super('outro');
     }
     create() {
-        this.add.text(50, 50, "With discoveries you've made, the gummy worm revolution is bound to happen any day.").setFontSize(50);
+        this.add.text(50, 50, "You head back to the rebel group's hideout with the secrets you've found. With the discoveries you've made, the gummy worm revolution is bound to happen any day.").setFontSize(50);
         this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
