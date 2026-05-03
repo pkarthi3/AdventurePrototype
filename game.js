@@ -5,51 +5,43 @@ class Room1 extends AdventureScene {
 
     onEnter() {
 
-        let clip = this.add.text(this.w * 0.3, this.w * 0.3, "📎 paperclip")
+        let sugar = this.add.text(this.w * 0.3, this.w * 0.3, "🍯 gummy worm sugar")
             .setFontSize(this.s * 2)
             .setInteractive()
             .on('pointerdown', () => {
-                this.showMessage("No touching!");
-                this.shake(clip);
+                this.showMessage("It'd be too suspicious if a key ingredient went missing.");
+                this.shake(sugar);
             });
-            this.describe(clip, "Metal, bent.");
+            this.describe(sugar, "Standard sugar used to flavor gummy worms. This batch at least seems like typical sour sugar.");
 
         let key = this.add.text(this.w * 0.5, this.w * 0.1, "🔑 key")
             .setFontSize(this.s * 2)
             .setInteractive()
             .on('pointerover', () => {
-                this.showMessage("It's a nice key.")
+                this.showMessage("The door in this room is unlocked, but maybe you could use this to unlock something else...")
             })
             .on('pointerdown', () => {
                 this.showMessage("You pick up the key.");
                 this.gainItem('key');
-                this.tweens.add({
-                    targets: key,
-                    y: `-=${2 * this.s}`,
-                    alpha: { from: 1, to: 0 },
-                    duration: 500,
-                    onComplete: () => key.destroy()
-                });
+                this.pickupAnimation(key);
             })
 
-        let door = this.add.text(this.w * 0.1, this.w * 0.15, "🚪 locked door")
+        let door = this.add.text(this.w * 0.1, this.w * 0.15, "🚪 door to the next room")
             .setFontSize(this.s * 2)
             .setInteractive()
-            .on('pointerover', () => {
-                if (this.hasItem("key")) {
-                    this.showMessage("You've got the key for this door.");
-                } else {
-                    this.showMessage("It's locked. Can you find a key?");
-                }
-            })
             .on('pointerdown', () => {
-                if (this.hasItem("key")) {
-                    this.loseItem("key");
-                    this.showMessage("*squeak*");
-                    door.setText("🚪 unlocked door");
-                    this.gotoScene('room2');
-                }
+                this.showMessage("You open the door.");
+                this.gotoScene('room2');
             })
+
+        let notes1 = this.add.text(50, 50, "📝 notes on the sugar")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.showMessage("You copy down the most important details about the sour sugar mentioned.")
+                this.gainItem('sour sugar notes');
+            })
+            this.describe(notes1, "Research notes detailing the process of creating the sour sugar on the gummy worms. They emphasize making the flavor more addictive.")
 
     }
 }

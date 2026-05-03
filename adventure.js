@@ -248,8 +248,7 @@ class AdventureScene extends Phaser.Scene {
         });
     }
 
-    pickup(item) {
-        this.gainItem(item);
+    pickupAnimation(item) {
         this.tweens.add({
                 targets: item,
                 y: `-=${2 * this.s}`,
