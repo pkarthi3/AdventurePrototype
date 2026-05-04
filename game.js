@@ -92,7 +92,7 @@ class Room2 extends AdventureScene {
                 this.showMessage("You copy down the most important details about the gummy base of the worms.")
                 this.gainItem('gummy notes');
             })
-            this.describe(notes, "Research notes detailing the process that the company went through to develop the gummy they use in their gummy worms. They also detail how the company made a gummy worm chai boom happen.");
+            this.describe(notes, "Research notes detailing the things that set apart the gummy in this company's gummy worms from the rest.");
 
         let box = this.add.text(this.w * 0.35, this.w * 0.4, "📦 locked box")
             .setFontSize(this.s * 2)
@@ -176,7 +176,43 @@ class SecretRoom extends AdventureScene {
     }
 
     onEnter() {
+        let door = this.add.text(this.w * 0.1, this.w * 0.5, "🚪 door back to main rooms")
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.showMessage("You open the door.");
+                this.gotoScene('room2');
+            })
+            this.describe(door, "A door to the room you were in before.");
         
+            let employeeCard = this.add.text(this.w * 0.4, this.w * 0.3, "🪪 employee card")
+                .setFontSize(this.s * 2)
+                .setInteractive()
+                .on('pointerdown', () => {
+                    this.showMessage("You pick up the card.");
+                    this.gainItem('employee card');
+                    this.pickupAnimation(employeeCard);
+                })
+                this.describe(employeeCard, "A card some worker here accidentally left behind.");
+
+            let notes = this.add.text(this.w * 0.1, this.w * 0.45, "📝 notes on the flavorings")
+                .setFontSize(this.s * 2)
+                .setInteractive()
+                .on('pointerdown', () => {
+                    this.showMessage("You copy down the most important details about the gummy worm flavors.")
+                    this.gainItem('flavor notes');
+                })
+                this.describe(notes, "Descriptions of the different gummy worm flavors and their effects on the taster. Most of the flavors make tasters more likely to blindly follow the company.")
+
+            let samples = this.add.text(this.w * 0.25, this.w * 0.35, "🪱 sample gummy worms")
+                .setFontSize(this.s * 2)
+                .setInteractive()
+                .on('pointerdown', () => {
+                    this.showMessage("Who knows what recipes were used here. It's possible that these batches are nothing like the current ones.");
+                    this.shake(samples);
+                })
+                this.describe(samples, "Different batches of gummy worms used to test different recipes.");
+
     }
 }
 
@@ -201,8 +237,10 @@ class Outro extends Phaser.Scene {
         super('outro');
     }
     create() {
-        this.add.text(50, 50, "You head back to the rebel group's hideout with the secrets you've found. With the discoveries you've made, the gummy worm revolution is bound to happen any day.").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
+        this.add.text(50, 50, "You head back to the rebel group's hideout with the secrets you've found. With the discoveries you've made, the gummy worm revolution is bound to happen any day.")
+            .setFontSize(50)
+            .setWordWrapWidth(this.game.config.width - 100)
+        this.add.text(50, 250, "Click anywhere to restart.").setFontSize(20);
         this.input.on('pointerdown', () => this.scene.start('intro'));
     }
 }
